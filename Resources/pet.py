@@ -26,6 +26,7 @@ class Pets(Resource):
 
 class Pet(Resource):
 
+	#retorna dados de 1 pet
 	def get(self, pet_id):
 		pet = PetModel.find_by_id(id=pet_id)
 
@@ -33,7 +34,7 @@ class Pet(Resource):
 		sql = text(query)
 		result = db.engine.execute(sql)
 		for r in result:
-			result_dict = dict(r.items()) # convert to dict keyed by column names
+			result_dict = dict(r.items())
 		if result_dict:
 			return {"pet": pet.json(), "owner": result_dict}
 		return {"message": "Pet not founded..."}, 404
@@ -41,8 +42,16 @@ class Pet(Resource):
 
 class UserPets(Resource):
 
+	#retorna lista de pets de um usuario
 	def get(self, user_id):
-		query = f"SELECT * FROM pet AS p JOIN user AS u ON p.user_id = {user_id}"
+		query = f"SELECT * FROM pet WHERE pet.user_id = {user_id}"
 		sql = text(query)
 		result = db.engine.execute(sql)
-		print(result)
+
+		lista = list()
+		for r in result:
+			result_dict = dict(r.items())
+			lista.append(result_dict.copy())
+		if result_dict:
+			return lista
+		return {"message": "Pet not founded..."}, 404
