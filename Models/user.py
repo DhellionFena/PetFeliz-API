@@ -30,7 +30,7 @@ class UserModel(db.Model):
 		'nome': self.nome,
 		'sobrenome': self.sobrenome,
 		'email': self.email,
-		'nascimento': self.nascimento,
+		'nascimento': str(self.nascimento),
 		'telefone': self.telefone
 		}
 		return data

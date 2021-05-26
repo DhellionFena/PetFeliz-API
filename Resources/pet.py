@@ -1,10 +1,15 @@
 from flask_restful import Resource, reqparse
 from Models.pet import PetModel
+from sqlalchemy import text
+from sql_alchemy import db
 
 atributtes = reqparse.RequestParser()
-atributtes.add_argument("name", type=str, required=True,help="Pet's name ")
-atributtes.add_argument("age", type=int, required=True,help="Pet's age")
-atributtes.add_argument("gender", type=str, required=True,help="Pet's gender")
+atributtes.add_argument("nome", type=str, required=True,help="Pet's name ")
+atributtes.add_argument("idade", type=int, required=True,help="Pet's age")
+atributtes.add_argument("imagem", type=str, required=True,help="Pet's image")
+atributtes.add_argument("motivoAdocao", type=str,help="Pet's gender")
+atributtes.add_argument("historico", type=str,help="Pet's history")
+atributtes.add_argument("user_id", type=int, required=True,help="Pet's gender")
 
 class Pets(Resource):
 
@@ -22,7 +27,22 @@ class Pets(Resource):
 class Pet(Resource):
 
 	def get(self, pet_id):
-		result = PetModel.find_by_id(id=pet_id)
-		if result:
-			return result.json()
-		return {"message": "Cat not founded..."}, 404
+		pet = PetModel.find_by_id(id=pet_id)
+
+		query = f"SELECT * FROM user WHERE user.id = {pet.user_id}"
+		sql = text(query)
+		result = db.engine.execute(sql)
+		for r in result:
+			result_dict = dict(r.items()) # convert to dict keyed by column names
+		if result_dict:
+			return {"pet": pet.json(), "owner": result_dict}
+		return {"message": "Pet not founded..."}, 404
+
+
+class UserPets(Resource):
+
+	def get(self, user_id):
+		query = f"SELECT * FROM pet AS p JOIN user AS u ON p.user_id = {user_id}"
+		sql = text(query)
+		result = db.engine.execute(sql)
+		print(result)

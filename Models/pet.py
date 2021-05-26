@@ -8,7 +8,7 @@ class PetModel(db.Model):
 	idade = db.Column(db.Integer, nullable=False)
 	imagem = db.Column(db.String(80), nullable=False)
 	motivoAdocao = db.Column(db.String(40), nullable=False)
-	historico = db.Column(db.DateTime, nullable=False)
+	historico = db.Column(db.String(100), nullable=False)
 
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 	user = db.relationship('UserModel', back_populates="pets")
