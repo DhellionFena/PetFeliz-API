@@ -10,7 +10,7 @@ class PetModel(db.Model):
 	motivoAdocao = db.Column(db.String(40), nullable=False)
 	historico = db.Column(db.DateTime, nullable=False)
 
-	user_id = Column(Integer, ForeignKey('user.id'))
+	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 	user = db.relationship('UserModel', back_populates="pets")
 
 	def __init__(self, nome, idade, imagem, motivoAdocao, historico, user_id):
