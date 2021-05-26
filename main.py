@@ -14,6 +14,6 @@ def cria_banco():
 api.add_resource(Pets, "/pets")
 api.add_resource(Pet, "/pets/<int:cat_id>")
 
+db.init_app(app)
 if __name__ == "__main__":
-	db.init_app(app)
 	app.run(debug=True)
